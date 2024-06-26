@@ -1,4 +1,6 @@
-exports.up = function(knex) {
+exports.up = async function(knex) {
+  const exists = await knex.schema.hasTable("movies");
+  if (!exists) {
     return knex.schema.createTable("movies", (table) => {
       table.increments("movie_id").primary();
       table.string("title").notNullable();
@@ -8,9 +10,12 @@ exports.up = function(knex) {
       table.string("image_url").notNullable();
       table.timestamps(true, true);
     });
-  };
-  
-  exports.down = function(knex) {
+  }
+};
+
+exports.down = async function(knex) {
+  const exists = await knex.schema.hasTable("movies");
+  if (exists) {
     return knex.schema.dropTable("movies");
-  };
-  
+  }
+};
